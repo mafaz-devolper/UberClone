@@ -35,7 +35,7 @@ const CaptainLogin = () => {
               setPassword(e.target.value)
             }} className="bg-[#eeeeee] w-full rounded mb-7 px-4 py-2 border outline-none placeholder:text-base" type="password" name="password" placeholder="password" required />
 
-            <Link to="/home" className="bg-black flex items-center justify-center text-white font-semibold w-full rounded px-4 py-2  placeholder:text-base">Login</Link>
+            <Link to="/captain-home" className="bg-black flex items-center justify-center text-white font-semibold w-full rounded px-4 py-2  placeholder:text-base">Login</Link>
             <p className="text-center mt-4 text-gray-800">Join a fleet? <Link to="/captain-signup" className="text-blue-600">Registor as captain</Link></p>
           </form>
         </div>

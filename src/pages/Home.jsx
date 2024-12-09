@@ -1,99 +1,131 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import LocationSearchPanel from "../components/LocationSearchPanel"
-// import { useGSAP } from "@gsap/react"
-// import gsap from 'gsap'
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
+import VehicalPanel from "../components/VehicalPanel"
+import ConfirmRide from "../components/ConfirmRide"
+import WaitingForDriver from "../components/WaitingForDriver"
 
 const Home = () => {
     const [pickup, setPickup] = useState('')
     const [destination, setDestination] = useState('')
-    // const [panelOpen, setpanelOpen] = useState(false)
-    // const vehicalPanelRef = useRef(null)
-    // const [panelRef, setpanelRef] = useState(null)
-    // const [vehicalPanel, setvehicalPanel] = useState('')
+    const [panelOpen, setpanelOpen] = useState(false)
+    const [vehicalPanel, setvehicalPanel] = useState(false)
+    const [confirmRidePanel, setconfirmRidePanel] = useState(false)
+    const [WaitingForDriverPanel, setWaitingForDriverPanel] = useState(false)
+    const panelRef = useRef(null)
+    const panelCloseRef = useRef(null)
+    const vehicalPanelRef = useRef(null)
+    const confirmRidePanelRef = useRef(null)
+    const WaitingForDriverRef = useRef(null)
 
     const submitHandler = (e) => {
         e.preventDefault()
     }
 
-    // useGSAP(function () {
-    //     if(panelOpen){
-    //         gsap.to(panelOpen.current, {
-    //             height:'70%'
-    //         })
-    //     }else{
-    //         gsap.to(panelOpen.current, {
-    //             height:'0%'
-    //         })  
-    //     }
-    // },[panelOpen])
+    useGSAP(() => {
+        if (panelOpen) {
+            gsap.to(panelRef.current, {
+                height: "70%",
+                opacity: "1",
+            })
+            gsap.to(panelCloseRef.current, {
+                opacity: "1",
+            })
+        } else {
+            gsap.to(panelRef.current, {
+                height: "0%",
+                opacity: "0",
+            })
+            gsap.to(panelCloseRef.current, {
+                opacity: "0",
+            })
+        }
 
-    // useGSAP(function () {
-    //     if(vehicalPanel){
-    //         gsap.to(vehicalPanelRef.current, {
-    //             transform:'translateY(0)'
-    //         })
-    //     }else{
-    //         gsap.to(vehicalPanelRef.current, {
-    //             transform:'translateY(100%)'
-    //         })  
-    //     }
-    // },[vehicalPanel])
+    }, [panelOpen])
+
+
+    useGSAP(() => {
+        if (vehicalPanel) {
+            gsap.to(vehicalPanelRef.current, {
+                transform: "translateY(0)"
+            })
+        } else {
+            gsap.to(vehicalPanelRef.current, {
+                transform: "translateY(100%)"
+            })
+        }
+    }, [vehicalPanel])
+
+    useGSAP(() => {
+        if (confirmRidePanel) {
+            gsap.to(confirmRidePanelRef.current, {
+                transform: "translateY(0)"
+            })
+        } else {
+            gsap.to(confirmRidePanelRef.current, {
+                transform: "translateY(100%)"
+            })
+        }
+    }, [confirmRidePanel])
+
+
+
+    useGSAP(() => {
+        if (WaitingForDriverPanel) {
+            gsap.to(WaitingForDriverRef.current, {
+                transform: "translateY(0)"
+            })
+        } else {
+            gsap.to(WaitingForDriverRef.current, {
+                transform: "translateY(100%)"
+            })
+        }
+    }, [WaitingForDriverPanel])
+
 
     return (
-        <div className="h-screen relative">
+        <div className="h-screen relative overflow-hidden">
             <img className="w-20 invert absolute top-5 left-5" src="/images/Uber-White-Dark-Background-Logo.wine.webp" alt="" />
             <div className="h-screen w-screen">
                 <img className="h-full w-full object-cover" src="/images/4HjX1.webp" alt="" />
             </div>
-            <div className="flex flex-col justify-end h-screen top-0 absolute w-full">
+            <div className="flex flex-col justify-end h-screen top-[6%] absolute w-full">
                 <div className="h-[30%] p-5 bg-white relative">
-                    <h5></h5>
-                    <h4 className="text-2xl font-semibold">Find a trip</h4>
+                    <div className="flex items-start justify-between">
+                        <h4 className="text-2xl font-semibold">Find a trip</h4>
+                        <h5 ref={panelCloseRef} onClick={() => {
+                            setpanelOpen(false)
+                        }} className="text-sm invert opacity-0">❌</h5>
+                    </div>
                     <form onSubmit={(e) => {
                         submitHandler(e)
                     }}>
                         <div className="line rounded-full absolute h-16 w-1 bg-gray-600 top-[43%] left-10"></div>
-                        <input value={pickup} onChange={(e) => {
+                        <input onClick={() => {
+                            setpanelOpen(true)
+                        }} value={pickup} onChange={(e) => {
                             setPickup(e.target.value)
                         }} className="bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-5" type="text" placeholder="Add a pick-up location" />
-                        <input value={destination} onChange={(e) => {
+                        <input onClick={() => {
+                            setpanelOpen(true)
+                        }} value={destination} onChange={(e) => {
                             setDestination(e.target.value)
                         }} className="bg-[#eee] px-12 py-2 text-base rounded-lg w-full mt-3" type="text" placeholder="Enter your destination" />
                     </form>
                 </div>
-                <div className="h-[70%] p-5 bg-gray-200 ">
-                    <LocationSearchPanel/>
+                <div ref={panelRef} className="h-[0%] p-5 opacity-0 bg-gray-200">
+                    <LocationSearchPanel setpanelOpen={setpanelOpen} setvehicalPanel={setvehicalPanel} />
                 </div>
             </div>
-            <div className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-8">
-                <h3 className="text-xl font-semibold mb-4">Choose a Vehical</h3>
-                <div className="flex items-start border-2 active:border-black rounded-xl p-3 justify-between mb-4">
-                    <img className="h-14" src="/images/bmw-m-series-m2-coupe-lci-modelfinder.png" alt="" />
-                    <div className="ml-2 w-1/2">
-                        <h4 className="font-semibold text-sm">UberGo <span className="text-xs font-medium">👤4</span></h4>
-                        <h5 className="font-medium text-sm">2 mins away</h5>
-                        <p className="font-normal text-xs text-gray-500">Affordable, compact rides</p>
-                    </div>
-                    <h2 className="text-xl font-semibold">₹193.20</h2>
-                </div>
-                <div className="flex items-start border-2 active:border-black rounded-xl p-3 justify-between mb-4">
-                    <img className="h-14" src="/images/bmw-m-series-m2-coupe-lci-modelfinder.png" alt="" />
-                    <div className="ml-2 w-1/2">
-                        <h4 className="font-semibold text-sm">UberGo <span className="text-xs font-medium">👤4</span></h4>
-                        <h5 className="font-medium text-sm">2 mins away</h5>
-                        <p className="font-normal text-xs text-gray-500">Affordable, compact rides</p>
-                    </div>
-                    <h2 className="text-xl font-semibold">₹193.20</h2>
-                </div>
-                <div className="flex items-start border-2 active:border-black rounded-xl p-3 justify-between mb-4">
-                    <img className="h-14" src="/images/bmw-m-series-m2-coupe-lci-modelfinder.png" alt="" />
-                    <div className="ml-2 w-1/2">
-                        <h4 className="font-semibold text-sm">UberGo <span className="text-xs font-medium">👤4</span></h4>
-                        <h5 className="font-medium text-sm">2 mins away</h5>
-                        <p className="font-normal text-xs text-gray-500">Affordable, compact rides</p>
-                    </div>
-                    <h2 className="text-xl font-semibold">₹193.20</h2>
-                </div>
+            <div ref={vehicalPanelRef} className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-8">
+                <VehicalPanel setconfirmRidePanel={setconfirmRidePanel} setvehicalPanel={setvehicalPanel} />
+            </div>
+            <div ref={confirmRidePanelRef} className="fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6">
+                <ConfirmRide setconfirmRidePanel={setconfirmRidePanel} setvehicalFound={setWaitingForDriverPanel} />
+            </div>
+            <div ref={WaitingForDriverRef} className="fixed w-full z-10 bottom-0  bg-white px-3 py-6">
+                <WaitingForDriver />
             </div>
         </div>
     )
